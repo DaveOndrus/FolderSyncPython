@@ -24,12 +24,17 @@ def main(argv):
                             logging.StreamHandler()
                         ])
 
-    while True:
+    """
+    after 300 seconds the app will close. Change (timer < 300) to True for not closing the app
+    """
+    timer = 0
+    while timer < 300:
         utils.sync_source_folder_with_replica_folder(args.source, args.replica)
         if keyboard.is_pressed('q'):
             print("Exiting the loop.")
             break
         time.sleep(interval)
+        timer = timer + interval
 
 
 if __name__ == '__main__':

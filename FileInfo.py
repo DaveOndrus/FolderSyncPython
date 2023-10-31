@@ -3,7 +3,15 @@ import os
 import utils
 
 
-class TreeNode:
+"""
+Object for mapping directory with info about it.
+    rel_path - relative path to file/folder
+    abs_path - absolute path to file/folder
+    is_file - True if object is file False if is a directory
+    children - list of Directory objects
+    hash_value - hash value if is_file = True
+"""
+class Directory:
     def __init__(self, path, is_file=False, hash_value=None):
         self.rel_path = None
         self.abs_path = path
@@ -52,13 +60,13 @@ class TreeNode:
 
 
 def generate_tree(root_path):
-    root_node = TreeNode(os.path.abspath(root_path))
+    root_node = Directory(os.path.abspath(root_path))
     for item in os.listdir(root_path):
         item_path = os.path.join(root_path, item)
         if os.path.isdir(item_path):
             root_node.add_child(generate_tree(item_path))
         else:
-            root_node.add_child(TreeNode(item_path, is_file=True, hash_value=utils.compute_hash(item_path)))
+            root_node.add_child(Directory(item_path, is_file=True, hash_value=utils.compute_hash(item_path)))
     return root_node
 
 
