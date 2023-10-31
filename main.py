@@ -2,16 +2,16 @@ import argparse
 import logging
 import time
 
-
 import utils
 
 
 def main(argv):
     argParser = argparse.ArgumentParser()
-    argParser.add_argument("-s", "--source", help="source file location")
-    argParser.add_argument("-r", "--replica", help="replica file location")
-    argParser.add_argument("-l", "--logfile", help="log file location")
-    argParser.add_argument("-i", "--interval", help="how many seconds wait until next synchronization")
+    argParser.add_argument("-s", "--source", required=True, help="source file location")
+    argParser.add_argument("-r", "--replica", required=True, help="replica file location")
+    argParser.add_argument("-l", "--logfile", required=True, help="log file location")
+    argParser.add_argument("-i", "--interval", type=utils.check_positive_int, required=True,
+                           help="how many seconds wait until next synchronization")
 
     args = argParser.parse_args()
     print("args=%s" % args)
@@ -29,9 +29,13 @@ def main(argv):
     timer = 0
     # while True:
     while timer < 300:
-        utils.sync_source_folder_with_replica_folder(args.source, args.replica)
-        time.sleep(interval)
-        timer = timer + interval
+        if utils.sync_source_folder_with_replica_folder(args.source, args.replica) != "Source location does not exists":
+            time.sleep(interval)
+            timer = timer + interval
+        else:
+            logger = logging.getLogger()
+            logger.error("Source location does not exists")
+            break
 
 
 if __name__ == '__main__':

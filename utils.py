@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import logging
 import os
@@ -13,8 +14,10 @@ logger = logging.getLogger()
 def sync_source_folder_with_replica_folder(source_location, replica_location):
     if not os.path.exists(replica_location):
         os.makedirs(replica_location)
+    if not os.path.exists(source_location):
+        return "Source location does not exists"
     if ((hash_directory(source_location) == hash_directory(replica_location) and
-            len(compare_directories(source_location, replica_location)) == 0) and
+         len(compare_directories(source_location, replica_location)) == 0) and
             len(compare_directories(replica_location, source_location)) == 0):
         return "Directories are synchronized"
     else:
@@ -118,3 +121,10 @@ def compare_directories(source_path, replica_path):
             if not os.path.exists(file_path2):
                 compare_list.append(file_path1)
     return compare_list
+
+
+def check_positive_int(value):
+    ivalue = int(value)
+    if ivalue <= 0:
+        raise argparse.ArgumentTypeError(f"{value} is not a positive integer")
+    return ivalue
