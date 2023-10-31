@@ -2,7 +2,6 @@ import os
 
 import utils
 
-
 """
 Object for mapping directory with info about it.
     rel_path - relative path to file/folder
@@ -11,6 +10,8 @@ Object for mapping directory with info about it.
     children - list of Directory objects
     hash_value - hash value if is_file = True
 """
+
+
 class Directory:
     def __init__(self, path, is_file=False, hash_value=None):
         self.rel_path = None
