@@ -3,7 +3,7 @@ import os
 import utils
 
 """
-Object for mapping directory with info about it.
+Object for mapping directory items with information.
     rel_path - relative path to file/folder
     abs_path - absolute path to file/folder
     is_file - True if object is file False if is a directory
@@ -12,7 +12,7 @@ Object for mapping directory with info about it.
 """
 
 
-class Directory:
+class DirectoryItem:
     def __init__(self, path, is_file=False, hash_value=None):
         self.rel_path = None
         self.abs_path = path
@@ -23,8 +23,7 @@ class Directory:
     def add_child(self, child):
         self.children.append(child)
 
-    def __str__(self):
-        return self.abs_path + ("/" if not self.is_file else "")
+
 
     def compare(self, other):
         if self.rel_path == other.rel_path:
@@ -61,13 +60,13 @@ class Directory:
 
 
 def generate_tree(root_path):
-    root_node = Directory(os.path.abspath(root_path))
+    root_node = DirectoryItem(os.path.abspath(root_path))
     for item in os.listdir(root_path):
         item_path = os.path.join(root_path, item)
         if os.path.isdir(item_path):
             root_node.add_child(generate_tree(item_path))
         else:
-            root_node.add_child(Directory(item_path, is_file=True, hash_value=utils.compute_hash(item_path)))
+            root_node.add_child(DirectoryItem(item_path, is_file=True, hash_value=utils.compute_hash(item_path)))
     return root_node
 
 
